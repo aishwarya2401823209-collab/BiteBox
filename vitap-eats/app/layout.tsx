@@ -7,7 +7,7 @@ import { WebVitals } from "@/components/WebVitals";
 export const metadata: Metadata = {
   title: { default: "ZipVIT", template: "%s | ZipVIT" },
   description: "Lightning-fast campus food & essentials delivery — order now, collect at Main Gate.",
-  keywords: ["food delivery", "VIT-AP", "campus delivery", "ZipVIT"],
+  keywords: ["food delivery", "BiteBox", "campus delivery", "ZipVIT"],
   manifest: "/manifest.json",
   appleWebApp: { capable: true, title: "ZipVIT", statusBarStyle: "default" },
   openGraph: {

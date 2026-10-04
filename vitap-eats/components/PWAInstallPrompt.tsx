@@ -70,7 +70,7 @@ export function PWAInstallPrompt() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/icons/icon-72x72.png" alt="App Icon" className="w-12 h-12 rounded-xl shrink-0" />
           <div className="flex-1 min-w-0">
-            <p className="font-bold text-gray-900 text-sm">Install VIT-AP Eats</p>
+            <p className="font-bold text-gray-900 text-sm">Install BiteBox </p>
             <p className="text-xs text-gray-500 mt-0.5">Add to your home screen for the best experience — faster access, works offline!</p>
           </div>
           <button onClick={handleDismiss} className="text-gray-400 hover:text-gray-600 shrink-0 -mt-1">
@@ -97,7 +97,7 @@ export function PWAInstallPrompt() {
     return (
       <div className="fixed bottom-0 inset-x-0 z-[400] bg-white border-t border-gray-100 shadow-2xl rounded-t-2xl p-5">
         <div className="flex items-center justify-between mb-3">
-          <p className="font-bold text-gray-900">Install VIT-AP Eats</p>
+          <p className="font-bold text-gray-900">Install BiteBox</p>
           <button onClick={handleDismiss} className="text-gray-400">
             <X size={20} />
           </button>

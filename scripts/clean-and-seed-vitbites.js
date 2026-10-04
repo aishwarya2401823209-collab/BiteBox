@@ -2,7 +2,7 @@
  * clean-and-seed-vitbites.js
  *
  * DESTRUCTIVE. Wipes restaurants, menu_items, orders, users, and
- * partner_applications collections, then seeds a fresh "VIT Bites"
+ * partner_applications collections, then seeds a fresh "BB Bites"
  * restaurant with the full wraps + pizza menu (including size variants).
  *
  * Setup:
@@ -43,9 +43,9 @@ const COLLECTIONS_TO_WIPE = [
 
 const CONFIRM_PHRASE = "DELETE ALL DATA";
 
-// ── VIT Bites seed data ─────────────────────────────────────────────────────
+// ── BB Bites seed data ─────────────────────────────────────────────────────
 const vitBites = {
-    name: "VIT Bites",
+    name: "BB Bites",
     slug: "vit-bites",
     cuisine: "Fast Food",
     rating: 4.8,
@@ -167,7 +167,7 @@ async function deleteCollection(collectionName, batchSize = 400) {
 async function main() {
     console.log("⚠️  This will PERMANENTLY DELETE all documents in:");
     COLLECTIONS_TO_WIPE.forEach((c) => console.log(`     - ${c}`));
-    console.log("    Then reseed a fresh VIT Bites restaurant + menu.\n");
+    console.log("    Then reseed a fresh BB Bites restaurant + menu.\n");
     console.log("    Firebase Authentication accounts are NOT deleted by this script.\n");
 
     const answer = await confirm(`Type "${CONFIRM_PHRASE}" to proceed: `);
@@ -181,12 +181,12 @@ async function main() {
         await deleteCollection(collectionName);
     }
 
-    console.log("\n🌱 Seeding VIT Bites...\n");
+    console.log("\n🌱 Seeding BB Bites...\n");
     const restRef = await db.collection("restaurants").add({
         ...vitBites,
         createdAt: FieldValue.serverTimestamp(),
     });
-    console.log(`✅  Created VIT Bites restaurant (${restRef.id})`);
+    console.log(`✅  Created BB Bites restaurant (${restRef.id})`);
 
     for (const item of menuItems) {
         await db.collection("menu_items").add({
@@ -197,7 +197,7 @@ async function main() {
         console.log(`   ✅  Added item: ${item.name}`);
     }
 
-    console.log(`\n✨ Done! Wiped ${COLLECTIONS_TO_WIPE.length} collections and seeded ${menuItems.length} menu items under VIT Bites (${restRef.id}).`);
+    console.log(`\n✨ Done! Wiped ${COLLECTIONS_TO_WIPE.length} collections and seeded ${menuItems.length} menu items under BB Bites (${restRef.id}).`);
     process.exit(0);
 }
 

@@ -109,7 +109,7 @@ class _SplashScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             const Text(
-              'VIT-AP Eats',
+              'BiteBox',
               style: TextStyle(
                 color: AppTheme.textPrimary,
                 fontSize: 24,

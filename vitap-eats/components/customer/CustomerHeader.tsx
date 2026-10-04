@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ShoppingCart, MapPin } from "lucide-react";
 import { useCartStore } from "@/lib/store/cart";
@@ -13,6 +13,10 @@ export default function CustomerHeader() {
   const { label } = useLocationStore();
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+  setMounted(true);
+}, []);
 
   const isAdmin = role === "admin";
 
@@ -26,10 +30,10 @@ export default function CustomerHeader() {
               className="w-8 h-8 rounded-[--radius-md] flex items-center justify-center text-white text-sm font-bold"
               style={{ background: "var(--color-primary)" }}
             >
-              VE
+              BB
             </span>
             <span className="font-bold text-lg hidden sm:block" style={{ fontFamily: "var(--font-heading)", color: "var(--color-on-surface)" }}>
-              VIT-AP Eats
+              BiteBox
             </span>
           </Link>
 
@@ -49,7 +53,7 @@ export default function CustomerHeader() {
               className="relative p-2 rounded-[--radius-md] hover:bg-[--color-surface-container-low] transition-colors"
             >
               <ShoppingCart size={20} style={{ color: "var(--color-on-surface-variant)" }} />
-              {count > 0 && (
+              {mounted && count > 0 && (
                 <span
                   className="absolute -top-0.5 -right-0.5 w-5 h-5 rounded-full text-white text-[10px] font-bold flex items-center justify-center"
                   style={{ background: "var(--color-primary)" }}

@@ -181,7 +181,7 @@ export default function PartnerApplyPage() {
               <input
                 value={form.restaurantName}
                 onChange={(e) => handleChange("restaurantName", e.target.value)}
-                placeholder="e.g. VIT Bites"
+                placeholder="e.g. BB Bites"
                 required
                 className="w-full px-4 py-2.5 rounded-[--radius-md] border border-[--color-border] bg-[--color-surface-container-low] text-[--color-on-surface] text-sm focus:outline-none focus:ring-2 focus:ring-[--color-primary]"
               />
@@ -254,7 +254,7 @@ export default function PartnerApplyPage() {
             </button>
 
             <p className="text-xs text-center text-[--color-on-surface-variant]">
-              By submitting, you agree to VIT-AP Eats&apos; partner terms. We&apos;ll review and respond within 24 hours.
+              By submitting, you agree to BiteBox&apos; partner terms. We&apos;ll review and respond within 24 hours.
             </p>
           </form>
         )}

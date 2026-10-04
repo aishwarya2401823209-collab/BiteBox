@@ -97,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 FadeInDown(
                   delay: const Duration(milliseconds: 150),
                   child: const Text(
-                    'VIT-AP Eats',
+                    'BiteBox',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: AppTheme.textPrimary,

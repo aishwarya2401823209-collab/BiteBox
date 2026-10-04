@@ -61,7 +61,7 @@ function SignupForm() {
           {isPartnerFlow ? "Partner with us" : "Create an Account"}
         </h1>
         <p className="text-sm text-[--color-on-surface-variant]">
-          {isPartnerFlow ? "Join VIT-AP Eats as a restaurant partner and grow your campus orders." : "Join VIT-AP Eats to get food delivered fast."}
+          {isPartnerFlow ? "Join BiteBox as a restaurant partner and grow your campus orders." : "Join BiteBox to get food delivered fast."}
         </p>
       </div>
 

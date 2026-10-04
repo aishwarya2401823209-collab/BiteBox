@@ -22,7 +22,7 @@ const STATUS_COLOR: Record<string, { bg: string; text: string }> = {
 export default function OrdersPage() {
   const router = useRouter();
   const { data: orders = [], isLoading, isError } = useOrders();
-  const { add, clearAndAdd, conflictingRestaurant } = useCartStore();
+  const { addMultiple,conflictingRestaurant } = useCartStore();
   const [reorderingId, setReorderingId] = useState<string | null>(null);
 
   const handleReorder = async (order: Order, e: React.MouseEvent) => {
@@ -35,14 +35,24 @@ export default function OrdersPage() {
       const restaurantId = order.restaurantId;
       const restaurantName = order.restaurantName;
 
-      for (const item of order.items) {
-        const conflicting = conflictingRestaurant(restaurantId);
-        if (conflicting) {
-          clearAndAdd({ id: item.menuItemId, restaurantId, restaurantName, name: item.name, price: item.price });
-        } else {
-          add({ id: item.menuItemId, restaurantId, restaurantName, name: item.name, price: item.price });
-        }
-      }
+      const conflicting = conflictingRestaurant(restaurantId);
+
+if (conflicting) {
+  useCartStore.getState().clear();
+}
+
+for (const item of order.items) {
+  addMultiple(
+    {
+      id: item.menuItemId,
+      restaurantId,
+      restaurantName,
+      name: item.name,
+      price: item.price,
+    },
+    item.quantity
+  );
+}
 
       toast.success("Items added to cart!", { icon: "🛒" });
       router.push("/cart");

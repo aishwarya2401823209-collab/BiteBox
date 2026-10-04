@@ -55,16 +55,15 @@ const withPWA = withPWAInit({
 });
 
 const nextConfig: NextConfig = {
-  // next-pwa injects a webpack config. Turbopack in Next.js 16 requires an explicit
-  // `turbopack` key alongside any `webpack` config to avoid a fatal build error.
   turbopack: {},
-  // Disable the floating Next.js development indicator badge
   devIndicators: false,
+
   images: {
     remotePatterns: [
-      { protocol: "https", hostname: "images.unsplash.com" },
-      { protocol: "https", hostname: "lh3.googleusercontent.com" },
-      { protocol: "https", hostname: "raw.githubusercontent.com" },
+      {
+        protocol: "https",
+        hostname: "**",
+      },
     ],
   },
 };
@@ -72,7 +71,7 @@ const nextConfig: NextConfig = {
 import { withSentryConfig } from "@sentry/nextjs";
 
 export default withSentryConfig(withPWA(nextConfig), {
-  org: "vit-ap-eats",
+  org: "BiteBox",
   project: "frontend",
   silent: true,
 });

@@ -57,7 +57,7 @@ function RestaurantModal({
             <div className="col-span-2">
               <label className="block text-sm font-semibold text-[--color-on-surface] mb-1">Restaurant Name *</label>
               <input value={form.name} onChange={e => onChange("name", e.target.value)}
-                placeholder="e.g. VIT Bites"
+                placeholder="e.g. BB Bites"
                 className="w-full px-3 py-2 rounded-lg border border-[--color-border] bg-[--color-surface-container-lowest] text-[--color-on-surface] text-sm focus:outline-none focus:ring-2 focus:ring-[--color-primary]" />
             </div>
             <div>

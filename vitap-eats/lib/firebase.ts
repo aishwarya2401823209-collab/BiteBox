@@ -45,6 +45,6 @@ if (isConfigured) {
 }
 
 console.log("🔥 Config project:", firebaseConfig.projectId);
-console.log("🔥 Actual app project:", app.options.projectId);
+console.log("🔥 Actual app project:", isConfigured ? app.options.projectId : "Not configured");
 
 export { app, auth, db, storage };

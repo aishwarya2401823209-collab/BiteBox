@@ -31,53 +31,11 @@ export default function HomePage() {
   return (
     <div className="min-h-screen pb-20" style={{ background: "var(--color-bg)" }}>
 
-      {/* ── HEADER BAR ──────────────────────────────────── */}
-      <header
-        className="sticky top-0 z-40 px-4 py-3 flex items-center justify-between"
-        style={{
-          background: "var(--color-primary)",
-          borderBottom: "1px solid var(--color-primary-dark)",
-        }}
-      >
-        {/* Logo */}
-        <div className="flex items-center gap-2">
-          <span
-            className="w-8 h-8 flex items-center justify-center font-extrabold text-sm"
-            style={{
-              background: "var(--color-on-primary)",
-              color: "var(--color-primary)",
-              borderRadius: "var(--radius-md)",
-              fontFamily: "var(--font-heading)",
-            }}
-          >
-            CE
-          </span>
-          <span
-            className="text-base font-extrabold tracking-tight"
-            style={{ color: "var(--color-on-primary)", fontFamily: "var(--font-heading)" }}
-          >
-            Campus Eats
-          </span>
-        </div>
-
-        {/* Location pill */}
-        <Link
-          href="/search"
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold max-w-[160px]"
-          style={{
-            background: "var(--color-primary-dark)",
-            color: "var(--color-on-primary)",
-            borderRadius: "var(--radius-full)",
-          }}
-        >
-          <MapPin size={12} className="shrink-0" />
-          <span className="truncate">{label}</span>
-        </Link>
-      </header>
+      
 
       {/* ── HERO / SEARCH ────────────────────────────────── */}
       <section
-        className="px-4 pt-5 pb-6"
+        className="relative px-6 md:px-10 pt-5 pb-6"
         style={{ background: "var(--color-primary)" }}
       >
         <h1
@@ -86,8 +44,8 @@ export default function HomePage() {
         >
           Hungry? 🍕<br />We deliver <span style={{ opacity: 0.8 }}>fresh.</span>
         </h1>
-        <p className="text-xs mb-4" style={{ color: "var(--color-primary-fixed)" }}>
-          VIT Bites · Collect at Main Gate · Receive by Evening
+        <p className="text-xs mb-5" style={{ color: "var(--color-primary-fixed)" }}>
+          BB Bites · Collect at Main Gate · Receive by Evening
         </p>
 
         {/* Small offer pill in banner */}
@@ -98,10 +56,35 @@ export default function HomePage() {
           </span>
         </div>
 
+        {/* Stats row */}
+<div   className="absolute right-6 md:right-10 top-6 flex flex-col items-end gap-2">
+  {[
+    { icon: Star, value: "4.8★", label: "Avg rating" },
+    { icon: Flame, value: "Fresh Daily", label: "Made fresh" },
+    { icon: Package, value: "Main Gate", label: "Easy pickup" },
+  ].map(({ icon: Icon, value, label }) => (
+    <div key={label} className="text-right">
+      <div
+        className="flex items-center justify-end gap-1 font-bold text-sm"
+        style={{ color: "var(--color-on-primary)" }}
+      >
+        <Icon size={13} style={{ opacity: 0.8 }} />
+        {value}
+      </div>
+      <div
+        className="text-[11px]"
+        style={{ color: "var(--color-primary-fixed)" }}
+      >
+        {label}
+      </div>
+    </div>
+  ))}
+</div>
+
         {/* Search bar */}
         <Link
           href="/search"
-          className="flex items-center gap-3 px-4 py-3"
+          className="flex items-center gap-3 px-4 py-3 mt-4"
           style={{
             background: "var(--color-surface-container-lowest)",
             borderRadius: "var(--radius-full)",
@@ -113,29 +96,10 @@ export default function HomePage() {
             Search dishes or restaurants…
           </span>
         </Link>
-
-        {/* Stats row */}
-        <div className="flex gap-4 mt-4">
-          {[
-            { icon: Star,    value: "4.8★",     label: "Avg rating"  },
-            { icon: Flame,   value: "Fresh Daily", label: "Made fresh"  },
-            { icon: Package, value: "Main Gate",    label: "Easy pickup" },
-          ].map(({ icon: Icon, value, label }) => (
-            <div key={label}>
-              <div
-                className="flex items-center gap-1 font-bold text-sm"
-                style={{ color: "var(--color-on-primary)" }}
-              >
-                <Icon size={13} style={{ opacity: 0.8 }} />
-                {value}
-              </div>
-              <div className="text-[11px]" style={{ color: "var(--color-primary-fixed)" }}>
-                {label}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+</section>
+ 
+          
+        
 
       <div className="px-4 py-5 space-y-8">
 
@@ -231,7 +195,7 @@ export default function HomePage() {
             ) : menuItems && menuItems.length > 0 ? (
               <div>
                 {menuItems.map((item) => {
-                  const rName = restaurants?.find((r) => r.id === item.restaurantId)?.name || "VIT Bites";
+                  const rName = restaurants?.find((r) => r.id === item.restaurantId)?.name || " BB Bites";
                   return (
                     <DishCard
                       key={item.id}
@@ -261,7 +225,7 @@ export default function HomePage() {
       >
         <div className="flex items-center justify-between gap-3 text-xs" style={{ color: "var(--color-on-surface-variant)" }}>
           <span className="font-bold" style={{ fontFamily: "var(--font-heading)", color: "var(--color-on-surface)" }}>
-            VIT-AP Eats
+            BiteBox
           </span>
           <span>© 2026 · Made on campus ❤️</span>
           <div className="flex flex-wrap items-center gap-3">

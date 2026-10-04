@@ -1,8 +1,8 @@
 {
   "packageId": "com.vitapeats.app",
   "host": "vitap-eats.pages.dev",
-  "name": "VIT-AP Eats",
-  "launcherName": "VIT-AP Eats",
+  "name": "BiteBox",
+  "launcherName": "BiteBox",
   "display": "standalone",
   "themeColor": "#f38020",
   "navigationColor": "#ffffff",

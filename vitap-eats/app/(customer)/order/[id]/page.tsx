@@ -121,9 +121,10 @@ export default function OrderTrackingPage({ params }: { params: Promise<{ id: st
   const handleCancelConfirm = () => {
     cancelOrder(undefined, {
       onSuccess: () => {
-        setShowCancel(false);
-        toast.error("Order cancelled.", { icon: "🚫" });
-      },
+  setShowCancel(false);
+  toast.error("Order cancelled.", { icon: "🚫" });
+  router.push("/");
+},
       onError: (err: any) => {
         setShowCancel(false);
         toast.error(err.message ?? "Could not cancel the order.");
@@ -140,7 +141,7 @@ export default function OrderTrackingPage({ params }: { params: Promise<{ id: st
   const handleShare = async () => {
     const url = window.location.href;
     if (navigator.share) {
-      await navigator.share({ title: "Track my VIT-AP Eats order", url });
+      await navigator.share({ title: "Track my BiteBox order", url });
     } else {
       await navigator.clipboard.writeText(url);
       toast.success("Tracking link copied!");

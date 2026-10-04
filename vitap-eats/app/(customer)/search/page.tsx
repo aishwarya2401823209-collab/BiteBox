@@ -118,7 +118,7 @@ export default function SearchPage() {
                 key={item.id}
                 dish={item as any}
                 restaurantId={item.restaurantId || ''}
-                restaurantName="VIT Bites"
+                restaurantName="BB Bites"
               />
             ))}
           </div>

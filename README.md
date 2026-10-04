@@ -1,17 +1,17 @@
 <div align="center">
   <img src="./vitap-eats/public/icons/icon-512x512.png" width="120" height="120" alt="VIT-AP Eats Logo" />
-  <h1>🍛 VIT-AP Eats</h1>
-  <p><b>The campus food delivery platform built for VIT-AP University students.</b></p>
+  <h1>🍛 BiteBox</h1>
+  <p><b>The campus food delivery platform built for University students.</b></p>
   <p><i>Order from your favourite canteen, track in real-time, straight to your hostel.</i></p>
 
   <br/>
 
-  ![Next.js](https://img.shields.io/badge/Next.js-16.3-black?logo=next.js&logoColor=white)
-  ![Firebase](https://img.shields.io/badge/Firebase-Firestore%20%2B%20Auth-FFCA28?logo=firebase&logoColor=black)
-  ![Vercel](https://img.shields.io/badge/Vercel-Deployed-black?logo=vercel)
-  ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?logo=typescript&logoColor=white)
-  ![PWA](https://img.shields.io/badge/PWA-Installable-5A0FC8?logo=pwa)
-  ![License](https://img.shields.io/badge/License-MIT-green)
+![Next.js](https://img.shields.io/badge/Next.js-16.3-black?logo=next.js&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase-Firestore%20%2B%20Auth-FFCA28?logo=firebase&logoColor=black)
+![Vercel](https://img.shields.io/badge/Vercel-Deployed-black?logo=vercel)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?logo=typescript&logoColor=white)
+![PWA](https://img.shields.io/badge/PWA-Installable-5A0FC8?logo=pwa)
+![License](https://img.shields.io/badge/License-MIT-green)
 
 </div>
 
@@ -19,17 +19,17 @@
 
 ## ✨ Key Features
 
-| Feature | Details |
-|---|---|
-| 🚀 **Progressive Web App** | Installable on iOS & Android, works offline |
-| 🔥 **Firebase Real-time** | Firestore `onSnapshot` for live order tracking |
-| 🔐 **Firebase Auth** | Email/Password + Google SSO, role-based routing |
-| 👑 **Admin Dashboard** | Full order management with WhatsApp confirmation |
-| 🍽️ **Menu Management** | Toggle item availability, grouped by category |
-| 📊 **Live Analytics** | Real-time revenue chart and top dishes from Firestore |
-| 🛵 **Order Tracking** | Live status updates from restaurant → delivered |
-| 💬 **WhatsApp Integration** | One-tap customer chat from admin order view |
-| 📱 **Responsive Design** | Mobile-first glassmorphism UI |
+| Feature                     | Details                                               |
+| --------------------------- | ----------------------------------------------------- |
+| 🚀 **Progressive Web App**  | Installable on iOS & Android, works offline           |
+| 🔥 **Firebase Real-time**   | Firestore `onSnapshot` for live order tracking        |
+| 🔐 **Firebase Auth**        | Email/Password + Google SSO, role-based routing       |
+| 👑 **Admin Dashboard**      | Full order management with WhatsApp confirmation      |
+| 🍽️ **Menu Management**      | Toggle item availability, grouped by category         |
+| 📊 **Live Analytics**       | Real-time revenue chart and top dishes from Firestore |
+| 🛵 **Order Tracking**       | Live status updates from restaurant → delivered       |
+| 💬 **WhatsApp Integration** | One-tap customer chat from admin order view           |
+| 📱 **Responsive Design**    | Mobile-first glassmorphism UI                         |
 
 ---
 
@@ -74,30 +74,30 @@ User Action  →  React Component  →  lib/db/*.ts (Firestore SDK)
 
 ### Firestore Collections
 
-| Collection | Description |
-|---|---|
-| `users` | User profiles & roles (`customer`, `partner`, `admin`) |
-| `restaurants` | Restaurant info, hours, cuisine |
-| `menu_items` | Dishes with price, category, availability |
-| `orders` | Order docs with real-time status |
+| Collection    | Description                                            |
+| ------------- | ------------------------------------------------------ |
+| `users`       | User profiles & roles (`customer`, `partner`, `admin`) |
+| `restaurants` | Restaurant info, hours, cuisine                        |
+| `menu_items`  | Dishes with price, category, availability              |
+| `orders`      | Order docs with real-time status                       |
 
 ---
 
 ## 🖥️ Pages & Roles
 
-| Route | Role | Description |
-|---|---|---|
-| `/` | Customer | Home: restaurant listing |
-| `/restaurant/[slug]` | Customer | Menu, add to cart |
-| `/cart` | Customer | Cart review + coupon |
-| `/checkout` | Customer | Place order |
-| `/order/[id]` | Customer | Live order tracking |
-| `/orders` | Customer | Order history |
-| `/login`, `/signup` | All | Firebase Auth |
-| `/forgot-password` | All | Password reset email |
-| `/admin` | Admin | Orders, Menu, Insights, Users |
-| `/partner` | Partner | Delivery dashboard |
-| `/partner/earnings` | Partner | Payout history |
+| Route                | Role     | Description                   |
+| -------------------- | -------- | ----------------------------- |
+| `/`                  | Customer | Home: restaurant listing      |
+| `/restaurant/[slug]` | Customer | Menu, add to cart             |
+| `/cart`              | Customer | Cart review + coupon          |
+| `/checkout`          | Customer | Place order                   |
+| `/order/[id]`        | Customer | Live order tracking           |
+| `/orders`            | Customer | Order history                 |
+| `/login`, `/signup`  | All      | Firebase Auth                 |
+| `/forgot-password`   | All      | Password reset email          |
+| `/admin`             | Admin    | Orders, Menu, Insights, Users |
+| `/partner`           | Partner  | Delivery dashboard            |
+| `/partner/earnings`  | Partner  | Payout history                |
 
 ---
 
@@ -188,7 +188,7 @@ For the admin panel to work, set a custom claim on your admin user via Firebase 
 
 ```js
 // Run once via Firebase Admin SDK
-admin.auth().setCustomUserClaims(adminUid, { role: 'admin' });
+admin.auth().setCustomUserClaims(adminUid, { role: "admin" });
 ```
 
 ### 6. Run Locally
@@ -256,11 +256,11 @@ vitap-eats/
 
 ## 🔧 Scripts
 
-| Command | Action |
-|---|---|
-| `npm run dev` | Start dev server (Turbopack) |
-| `npm run build` | Production build |
-| `npm run lint` | ESLint check |
+| Command         | Action                       |
+| --------------- | ---------------------------- |
+| `npm run dev`   | Start dev server (Turbopack) |
+| `npm run build` | Production build             |
+| `npm run lint`  | ESLint check                 |
 
 ---
 

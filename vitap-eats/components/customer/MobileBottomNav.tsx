@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { Home, Search, ShoppingCart, User, Bike } from "lucide-react";
 import { useCartStore } from "@/lib/store/cart";
 import { cn } from "@/lib/utils";
@@ -16,6 +17,10 @@ const NAV = [
 export default function MobileBottomNav() {
   const pathname = usePathname();
   const count = useCartStore((s) => s.count());
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+  setMounted(true);
+}, []);
 
   return (
     <nav
@@ -40,7 +45,7 @@ export default function MobileBottomNav() {
             >
               <span className="relative">
                 <Icon size={22} strokeWidth={active ? 2.5 : 1.8} />
-                {cart && count > 0 && (
+                {cart && mounted && count > 0 && (
                   <span className="absolute -top-1.5 -right-2 w-4 h-4 rounded-full text-white text-[9px] font-bold flex items-center justify-center bg-[--color-primary]">
                     {count > 9 ? "9+" : count}
                   </span>

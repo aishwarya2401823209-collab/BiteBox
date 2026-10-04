@@ -20,7 +20,7 @@ function buildWhatsAppUrl(order: Order): string {
   const shortId = order.id.slice(0, 6).toUpperCase();
   const itemsList = order.items.map((i) => `${i.quantity}× ${i.name}`).join(", ");
   const text = encodeURIComponent(
-    `Hi ${order.userName}! 👋\n\nYour order #${shortId} from VIT-AP Eats has been *confirmed* ✅\n\n` +
+    `Hi ${order.userName}! 👋\n\nYour order #${shortId} from BiteBox has been *confirmed* ✅\n\n` +
     `🍽️️ Items: ${itemsList}\n💰 Total: ₹${order.total}+GST\n\nReceive by Evening at Main Gate. Thank you! 🚀`
   );
   return `https://wa.me/${phone}?text=${text}`;
@@ -132,7 +132,7 @@ export default function AdminOrdersPage() {
                     <p className="text-sm font-semibold text-[--color-on-surface] mb-0.5">
                       {order.userName}{" "}
                       <span className="text-xs font-normal text-[--color-on-surface-variant]">
-                        · {order.restaurantName || "VIT Bites"}
+                        · {order.restaurantName || "BB Bites"}
                       </span>
                     </p>
                     <p className="text-xs text-[--color-on-surface-variant] mb-2 line-clamp-1">

@@ -13,7 +13,7 @@ initializeApp({ credential: cert(serviceAccount) });
 const db = getFirestore();
 
 const vitBites = {
-  name: "VIT Bites",
+  name: "BB Bites",
   slug: "vit-bites",
   cuisine: "Fast Food",
   rating: 4.8,
@@ -49,7 +49,7 @@ const menuItems = [
 ];
 
 async function seed() {
-  console.log("🌱 Seeding VIT Bites...");
+  console.log("🌱 Seeding BB Bites...");
 
   const existing = await db.collection("restaurants")
     .where("slug", "==", vitBites.slug).limit(1).get();
@@ -57,14 +57,14 @@ async function seed() {
   let restId;
   if (!existing.empty) {
     restId = existing.docs[0].id;
-    console.log(`⏭️  VIT Bites already exists: ${restId}`);
+    console.log(`⏭️  BB Bites already exists: ${restId}`);
   } else {
     const ref = await db.collection("restaurants").add({
       ...vitBites,
       createdAt: FieldValue.serverTimestamp(),
     });
     restId = ref.id;
-    console.log(`✅  Created VIT Bites: ${restId}`);
+    console.log(`✅  Created BB Bites: ${restId}`);
   }
 
   for (const item of menuItems) {

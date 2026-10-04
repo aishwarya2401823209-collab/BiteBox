@@ -1,6 +1,6 @@
 {
-  "name": "VIT-AP Eats",
-  "short_name": "VitApEats",
+  "name": "BiteBox",
+  "short_name": "BiteBox",
   "description": "Order food from restaurants across VIT-AP University campus.",
   "start_url": "/",
   "display": "standalone",
