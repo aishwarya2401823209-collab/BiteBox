@@ -58,6 +58,8 @@ const nextConfig: NextConfig = {
   // next-pwa injects a webpack config. Turbopack in Next.js 16 requires an explicit
   // `turbopack` key alongside any `webpack` config to avoid a fatal build error.
   turbopack: {},
+  // Disable the floating Next.js development indicator badge
+  devIndicators: false,
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },

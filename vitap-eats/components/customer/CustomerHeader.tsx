@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { ShoppingCart, MapPin, Search, Bell } from "lucide-react";
+import { ShoppingCart, MapPin } from "lucide-react";
 import { useCartStore } from "@/lib/store/cart";
 import { useSession } from "@/lib/hooks/useSession";
 import { useLocationStore } from "@/lib/store/location";
@@ -13,6 +13,8 @@ export default function CustomerHeader() {
   const { label } = useLocationStore();
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+
+  const isAdmin = role === "admin";
 
   return (
     <>
@@ -31,7 +33,7 @@ export default function CustomerHeader() {
             </span>
           </Link>
 
-          {/* Location chip (desktop) - NOW CLICKABLE */}
+          {/* Location chip (desktop) */}
           <button 
             onClick={() => setIsLocationOpen(true)}
             className="hidden md:flex items-center gap-1.5 text-sm text-[--color-on-surface-variant] hover:text-[--color-on-surface] border border-[--color-border] hover:border-[--color-primary] rounded-[--radius-full] px-3 py-1.5 transition-colors cursor-pointer"
@@ -40,21 +42,8 @@ export default function CustomerHeader() {
             <span className="max-w-[160px] truncate">{label}</span>
           </button>
 
-          {/* Search bar (desktop) */}
-          <Link
-            href="/search"
-            className="hidden md:flex items-center gap-2 bg-[--color-surface-container-low] rounded-[--radius-md] px-4 py-2 text-sm text-[--color-text-secondary] hover:bg-[--color-surface-container] transition-colors flex-1 max-w-xs"
-          >
-            <Search size={16} />
-            <span>Search restaurants...</span>
-          </Link>
-
           {/* Actions */}
           <div className="flex items-center gap-1">
-            <button className="relative p-2 rounded-[--radius-md] hover:bg-[--color-surface-container-low] transition-colors">
-              <Bell size={20} style={{ color: "var(--color-on-surface-variant)" }} />
-            </button>
-
             <Link
               href="/cart"
               className="relative p-2 rounded-[--radius-md] hover:bg-[--color-surface-container-low] transition-colors"
@@ -93,8 +82,12 @@ export default function CustomerHeader() {
                           </Link>
                         )}
                         <Link href="/profile" onClick={() => setIsProfileOpen(false)} className="block px-4 py-2 text-sm text-[--color-on-surface] hover:bg-[--color-surface-container-low] transition-colors">My Profile</Link>
-                        <Link href="/orders" onClick={() => setIsProfileOpen(false)} className="block px-4 py-2 text-sm text-[--color-on-surface] hover:bg-[--color-surface-container-low] transition-colors">Orders</Link>
-                        <Link href="/favorites" onClick={() => setIsProfileOpen(false)} className="block px-4 py-2 text-sm text-[--color-on-surface] hover:bg-[--color-surface-container-low] transition-colors">Favorites</Link>
+                        
+                        {/* Orders visible only for customers, hidden for admin */}
+                        {!isAdmin && (
+                          <Link href="/orders" onClick={() => setIsProfileOpen(false)} className="block px-4 py-2 text-sm text-[--color-on-surface] hover:bg-[--color-surface-container-low] transition-colors">Orders</Link>
+                        )}
+
                         <button onClick={() => { setIsProfileOpen(false); signOut(); }} className="block w-full text-left px-4 py-2 text-sm text-[--color-error] hover:bg-[--color-surface-container-low] transition-colors">Sign out</button>
                       </div>
                     </div>

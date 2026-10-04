@@ -1,130 +1,125 @@
 "use client";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+
 import Link from "next/link";
-import { TrendingUp, ShoppingBag, Star, Bike, Loader2, Lock, Users, Store } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Toaster } from "react-hot-toast";
-import { useSession } from "@/lib/hooks/useSession";
+import { useRouter } from "next/navigation";
+import { ClipboardList, Users, DollarSign, UtensilsCrossed, TrendingUp, ArrowRight, LogOut } from "lucide-react";
+import toast from "react-hot-toast";
 
-// Import tabs
-import { OrdersTab }       from "./OrdersTab";
-import { ApplicationsTab } from "./ApplicationsTab";
-import { PartnersTab }     from "./PartnersTab";
-import { RestaurantsTab }  from "./RestaurantsTab";
-import { MenuTab }         from "./MenuTab";
-import { InsightsTab }     from "./InsightsTab";
-
-const NAV_ITEMS = [
-  { id: "orders",       label: "Orders",       icon: ShoppingBag },
-  { id: "applications", label: "Applications", icon: Users       },
-  { id: "partners",     label: "Partners",     icon: Bike        },
-  { id: "restaurants",  label: "Restaurants",  icon: Store       },
-  { id: "menu",         label: "Menu",         icon: Star        },
-  { id: "insights",     label: "Insights",     icon: TrendingUp  },
-];
-
-export default function AdminPage() {
-  const { user, role, loading } = useSession();
+export default function AdminDashboardHome() {
   const router = useRouter();
-  const [tab, setTab] = useState<"orders" | "applications" | "partners" | "restaurants" | "menu" | "insights">("orders");
 
-  // Redirect if not admin after session resolves
-  useEffect(() => {
-    if (!loading && role !== "admin") {
-      router.replace("/");
-    }
-  }, [loading, role, router]);
+  const handleLogout = () => {
+    // Agar koi Firebase auth signOut lagana ho toh yahan laga sakte ho, abhi direct redirect kar rahe hain
+    toast.success("Logged out successfully");
+    router.push("/"); // Ya jahan bhi login page ho
+  };
 
-  // Loading / access denied states
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[--color-bg]">
-        <Loader2 size={36} className="animate-spin text-[--color-primary]" />
-      </div>
-    );
-  }
-
-  if (role !== "admin") {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-[--color-bg] text-center p-4">
-        <Lock size={48} className="text-[--color-error]" />
-        <h1 className="text-2xl font-bold text-[--color-on-surface]">Access Denied</h1>
-        <p className="text-[--color-on-surface-variant]">You need admin privileges to access this page.</p>
-      </div>
-    );
-  }
+  const adminModules = [
+    {
+      title: "Live Orders",
+      description: "Manage incoming customer orders, update statuses, and check live delivery sync.",
+      icon: <ClipboardList className="text-orange-600" size={28} />,
+      href: "/admin/orders",
+      bg: "bg-white/80 border-orange-200",
+      badge: "Real-time sync 🟢"
+    },
+    {
+      title: "Delivery Partners",
+      description: "View active campus runners and assign delivery logistics.",
+      icon: <Users className="text-blue-600" size={28} />,
+      href: "/admin/partners",
+      bg: "bg-white/80 border-blue-200",
+    },
+    {
+      title: "Earnings & Analytics",
+      description: "Track total revenue, daily sales performance, and insights.",
+      icon: <DollarSign className="text-green-600" size={28} />,
+      href: "/admin/earnings",
+      bg: "bg-white/80 border-green-200",
+    },
+    {
+      title: "Menu Management",
+      description: "Add, update, or remove dishes, prices, and item availability.",
+      icon: <UtensilsCrossed className="text-purple-600" size={28} />,
+      href: "/admin/menu",
+      bg: "bg-white/80 border-purple-200",
+    },
+  ];
 
   return (
-    <div className="min-h-screen flex bg-[--color-bg]">
-      <Toaster position="top-right" />
-
-      {/* Sidebar (desktop) */}
-      <aside className="hidden md:flex flex-col w-56 shrink-0 border-r border-[--color-border] sticky top-0 h-screen" style={{ backgroundColor: "var(--color-surface-container-lowest)" }}>
-        <div className="p-4 border-b border-[--color-border]">
-          <div className="flex items-center gap-2">
-            <span className="w-8 h-8 rounded-[--radius-md] flex items-center justify-center text-white text-xs font-bold" style={{ background: "var(--color-primary)" }}>VE</span>
-            <div>
-              <p className="font-bold text-sm text-[--color-on-surface]" style={{ fontFamily: "var(--font-heading)" }}>Admin Center</p>
-              <p className="text-xs text-[--color-tertiary]">● Live Ops</p>
-            </div>
-          </div>
-          <p className="text-xs text-[--color-on-surface-variant] mt-2 truncate">{user?.email}</p>
-        </div>
-        <nav className="p-3 flex-1 space-y-1">
-          {NAV_ITEMS.map(({ id, label, icon: Icon }) => (
-            <button
-              key={id}
-              onClick={() => setTab(id as typeof tab)}
-              className={cn(
-                "w-full flex items-center gap-3 px-3 py-2.5 rounded-[--radius-md] text-sm font-medium transition-colors",
-                tab === id ? "text-white" : "text-[--color-on-surface-variant] hover:bg-[--color-surface-container-low]"
-              )}
-              style={tab === id ? { background: "var(--color-primary)" } : {}}
-            >
-              <Icon size={18} />
-              {label}
-            </button>
-          ))}
-        </nav>
-        <div className="p-3 border-t border-[--color-border]">
-          <Link href="/" className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm text-[--color-on-surface-variant] hover:bg-[--color-surface-container-low] transition-colors">
-            ← Back to Site
-          </Link>
-        </div>
-      </aside>
-
-      {/* Main content */}
-      <div className="flex-1 min-w-0">
-        {/* Top bar */}
-        <header className="sticky top-0 z-40 border-b border-[--color-border] shadow-sm" style={{ backgroundColor: "var(--color-surface-container-lowest)" }}>
-          <div className="px-4 md:px-6 h-14 flex items-center gap-3">
-            <h1 className="font-bold text-[--color-on-surface] flex-1" style={{ fontFamily: "var(--font-heading)" }}>
-              {NAV_ITEMS.find((n) => n.id === tab)?.label}
+    <div className="min-h-screen p-6 md:p-10" style={{ backgroundColor: "#F7EDDF" }}>
+      <div className="max-w-5xl mx-auto">
+        {/* Header with Profile / Logout */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 bg-white/70 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-amber-900/10">
+          <div>
+            <span className="px-3 py-1 bg-orange-100 text-orange-700 font-bold rounded-full text-xs uppercase tracking-wider">
+              Admin Portal 🚀
+            </span>
+            <h1 className="text-3xl font-extrabold text-gray-900 mt-2" style={{ fontFamily: "var(--font-heading)" }}>
+              Welcome back, Admin
             </h1>
-            {/* Mobile nav tabs */}
-            <div className="md:hidden flex gap-1">
-              {NAV_ITEMS.map(({ id, icon: Icon }) => (
-                <button
-                  key={id}
-                  onClick={() => setTab(id as typeof tab)}
-                  className={cn("p-1.5 rounded-[--radius-md] transition-colors", tab === id ? "text-white" : "text-[--color-on-surface-variant]")}
-                  style={tab === id ? { background: "var(--color-primary)" } : {}}
-                >
-                  <Icon size={18} />
-                </button>
-              ))}
-            </div>
+            <p className="text-sm text-gray-600 mt-1">
+              Manage your store operations, live orders, and earnings from one central dashboard.
+            </p>
           </div>
-        </header>
+          
+          <div className="flex items-center gap-3 flex-wrap">
+            <div className="flex items-center gap-2 bg-white px-4 py-2.5 rounded-xl border border-amber-900/10 shadow-sm">
+              <TrendingUp size={18} className="text-green-600" />
+              <div className="text-xs">
+                <p className="text-gray-400 font-medium">System Status</p>
+                <p className="font-bold text-gray-800">All Systems Online 🟢</p>
+              </div>
+            </div>
 
-        <div className="px-4 md:px-6 py-6 space-y-6">
-          {tab === "orders"       && <OrdersTab />}
-          {tab === "applications" && <ApplicationsTab />}
-          {tab === "partners"     && <PartnersTab partners={[]} />}
-          {tab === "restaurants"  && <RestaurantsTab />}
-          {tab === "menu"         && <MenuTab />}
-          {tab === "insights"     && <InsightsTab />}
+            {/* Logout Button */}
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 px-4 py-2.5 bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 rounded-xl font-bold text-xs shadow-sm transition-all active:scale-95"
+              title="Logout from Admin Portal"
+            >
+              <LogOut size={16} /> Logout
+            </button>
+          </div>
+        </div>
+
+        {/* Quick Access Cards Grid */}
+        <h2 className="text-lg font-bold text-gray-800 mb-4" style={{ fontFamily: "var(--font-heading)" }}>
+          Quick Management Links
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {adminModules.map((module, idx) => (
+            <Link
+              key={idx}
+              href={module.href}
+              className="p-6 rounded-2xl border transition-all duration-200 hover:shadow-md hover:-translate-y-1 bg-white/80 backdrop-blur-sm border-amber-900/10 flex flex-col justify-between group"
+            >
+              <div>
+                <div className="flex justify-between items-start mb-4">
+                  <div className={`w-14 h-14 rounded-xl flex items-center justify-center ${module.bg} shadow-sm`}>
+                    {module.icon}
+                  </div>
+                  {module.badge && (
+                    <span className="px-2.5 py-1 bg-orange-100 text-orange-700 font-bold rounded-full text-[10px]">
+                      {module.badge}
+                    </span>
+                  )}
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 group-hover:text-orange-600 transition-colors">
+                  {module.title}
+                </h3>
+                <p className="text-sm text-gray-600 mt-1.5 line-clamp-2">
+                  {module.description}
+                </p>
+              </div>
+
+              <div className="flex items-center gap-1 text-sm font-bold text-orange-600 mt-6 pt-4 border-t border-amber-900/10">
+                <span>Access module</span>
+                <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </div>

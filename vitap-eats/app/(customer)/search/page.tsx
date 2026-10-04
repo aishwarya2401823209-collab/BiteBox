@@ -1,123 +1,129 @@
 "use client";
-import { useState, useMemo } from "react";
-import { Search, X, Clock, ChevronDown } from "lucide-react";
-import RestaurantCard from "@/components/customer/RestaurantCard";
-import { RestaurantGridSkeleton } from "@/components/ui/Skeleton";
-import { useRestaurants } from "@/lib/hooks";
-import { debounce, cn } from "@/lib/utils";
 
-const SORT_OPTIONS = [
-  { value: "relevance", label: "Relevance" },
-  { value: "rating",    label: "Rating"    },
-  { value: "time",      label: "Delivery time" },
-  { value: "fee",       label: "Delivery fee" },
-];
+import React, { useState, useEffect } from 'react';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { Search, Utensils } from 'lucide-react';
+import { DishCard } from "@/components/customer/DishCard";
+
+interface MenuItem {
+  id: string;
+  name: string;
+  category: string;
+  price: number;
+  description?: string;
+  image?: string;
+  isAvailable?: boolean;
+  restaurantId?: string;
+}
 
 export default function SearchPage() {
-  const [query, setQuery]     = useState("");
-  const [sort, setSort]       = useState("relevance");
-  const [vegOnly, setVegOnly] = useState(false);
-  const [maxTime, setMaxTime] = useState<number | null>(null);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(true);
 
-  // Fetch all restaurants — client-side filter on the result
-  const { data: restaurants = [], isLoading, isError } = useRestaurants();
+  useEffect(() => {
+    const fetchMenu = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'menu_items'));
+        const items: MenuItem[] = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          items.push({ 
+            id: doc.id, 
+            name: data.name || '',
+            category: data.category || '',
+            price: data.price || 0,
+            description: data.description || '',
+            image: data.image || '',
+            isAvailable: data.isAvailable ?? true,
+            restaurantId: data.restaurantId || ''
+          });
+        });
+        setMenuItems(items);
+      } catch (error) {
+        console.error('Error fetching menu items:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // Debounce the search query state update
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const handleInput = useMemo(() => debounce((v: string) => setQuery(v), 300), []);
+    fetchMenu();
+  }, []);
 
-  const filtered = restaurants
-    .filter((r: any) => {
-      if (vegOnly && !r.isVeg) return false;
-      if (maxTime && r.deliveryTime > maxTime) return false;
-      if (!query) return true;
-      const q = query.toLowerCase();
-      return r.name.toLowerCase().includes(q) || r.cuisine?.toLowerCase().includes(q);
-    })
-    .sort((a: any, b: any) => {
-      if (sort === "rating") return b.rating - a.rating;
-      if (sort === "time")   return a.deliveryTime - b.deliveryTime;
-      if (sort === "fee")    return a.deliveryFee - b.deliveryFee;
-      return 0;
-    });
+  const filteredItems = menuItems.filter((item) => {
+    const query = searchQuery.toLowerCase().trim();
+    if (!query) return true;
+
+    const matchesName = item.name?.toLowerCase().includes(query);
+    const matchesCategory = item.category?.toLowerCase().includes(query);
+    const matchesDescription = item.description?.toLowerCase().includes(query);
+
+    return matchesName || matchesCategory || matchesDescription;
+  });
 
   return (
-    <div className="max-w-[1280px] mx-auto px-4 md:px-10 py-6">
-      {/* Search input */}
-      <div className="relative mb-4">
-        <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[--color-on-surface-variant]" />
+    <div className="min-h-screen pb-16 px-6 pt-6 max-w-6xl mx-auto" style={{ background: "var(--color-surface, #fdfbf7)" }}>
+      <h1 
+        className="text-2xl font-extrabold mb-4" 
+        style={{ fontFamily: "var(--font-heading)", color: "var(--color-on-surface, #1d1b16)" }}
+      >
+        Search Menu Items
+      </h1>
+
+      <div className="relative max-w-xl mb-8">
+        <Search className="absolute left-4 top-3.5 h-5 w-5" style={{ color: "var(--color-on-surface-variant)" }} />
         <input
-          type="search"
-          placeholder="Search restaurants, cuisines, dishes…"
-          onChange={(e) => handleInput(e.target.value)}
-          className="w-full pl-10 pr-4 py-3 rounded-[--radius-lg] border border-[--color-border] bg-[--color-surface-container-lowest] text-[--color-on-surface] placeholder:text-[--color-text-secondary] focus:outline-none focus:border-[--color-primary] focus:ring-1 focus:ring-[--color-primary] transition-all text-sm"
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search for 'Cheese Pizza', 'Cold Coffee'..."
+          className="w-full pl-12 pr-4 py-3 text-sm rounded-2xl border shadow-sm focus:outline-none focus:ring-2"
+          style={{ 
+            borderColor: "var(--color-border, #e6e1d6)",
+            background: "var(--color-surface-container-lowest, #ffffff)",
+            color: "var(--color-on-surface)"
+          }}
         />
       </div>
 
-      {/* Filters */}
-      <div className="flex gap-2 overflow-x-auto hide-scrollbar mb-6 pb-1">
-        <div className="relative shrink-0">
-          <select value={sort} onChange={(e) => setSort(e.target.value)}
-            className="appearance-none pl-3 pr-8 py-1.5 rounded-[--radius-full] border border-[--color-border] bg-[--color-surface-container-lowest] text-sm font-medium text-[--color-on-surface] focus:outline-none cursor-pointer">
-            {SORT_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-          </select>
-          <ChevronDown size={14} className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-[--color-on-surface-variant]" />
-        </div>
+      <div>
+        <h2 className="text-lg font-bold mb-4" style={{ color: "var(--color-on-surface)" }}>
+          Results ({filteredItems.length})
+        </h2>
 
-        <button onClick={() => setVegOnly((v) => !v)}
-          className={cn("shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-[--radius-full] border text-sm font-medium transition-all",
-            vegOnly ? "border-green-600 bg-green-50 text-green-700" : "border-[--color-border] text-[--color-on-surface-variant] bg-[--color-surface-container-lowest]")}>
-          <span className="w-3 h-3 rounded-sm border-2 border-green-600 flex items-center justify-center">
-            <span className="w-1.5 h-1.5 rounded-full bg-green-600" />
-          </span>
-          Veg Only {vegOnly && <X size={12} />}
-        </button>
-
-        {[30, 45].map((t) => (
-          <button key={t} onClick={() => setMaxTime((prev) => prev === t ? null : t)}
-            className={cn("shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-[--radius-full] border text-sm font-medium transition-all",
-              maxTime === t ? "text-white border-[--color-primary]" : "border-[--color-border] text-[--color-on-surface-variant] bg-[--color-surface-container-lowest]")}
-            style={maxTime === t ? { background: "var(--color-primary)" } : {}}>
-            <Clock size={12} />Under {t} min
-          </button>
-        ))}
+        {loading ? (
+          <div className="text-center py-12" style={{ color: "var(--color-on-surface-variant)" }}>
+            Loading items...
+          </div>
+        ) : filteredItems.length === 0 ? (
+          <div className="text-center py-12 p-8 rounded-2xl border border-dashed" style={{ borderColor: "var(--color-border)" }}>
+            <Utensils className="mx-auto h-12 w-12 mb-3 opacity-40" style={{ color: "var(--color-on-surface)" }} />
+            <p className="font-semibold text-base" style={{ color: "var(--color-on-surface)" }}>No matching dishes found</p>
+            <p className="text-xs mt-1" style={{ color: "var(--color-on-surface-variant)" }}>
+              Try searching for &quot;Pizza&quot;, &quot;Coffee&quot;, or broader terms.
+            </p>
+          </div>
+        ) : (
+          <div 
+            style={{
+              background: "var(--color-surface-container-lowest)",
+              borderRadius: "var(--radius-xl)",
+              boxShadow: "var(--shadow-sm)",
+              padding: "0 1rem",
+            }}
+          >
+            {filteredItems.map((item) => (
+              <DishCard
+                key={item.id}
+                dish={item as any}
+                restaurantId={item.restaurantId || ''}
+                restaurantName="VIT Bites"
+              />
+            ))}
+          </div>
+        )}
       </div>
-
-      {/* State */}
-      {isLoading && <RestaurantGridSkeleton />}
-      {isError && (
-        <div className="text-center py-20">
-          <p className="text-5xl mb-3">😕</p>
-          <p className="font-semibold text-[--color-on-surface]">Failed to load restaurants</p>
-        </div>
-      )}
-
-      {!isLoading && !isError && (
-        <>
-          <p className="text-sm text-[--color-on-surface-variant] mb-4">
-            {filtered.length} restaurant{filtered.length !== 1 ? "s" : ""}{query ? ` for "${query}"` : " near you"}
-          </p>
-          {filtered.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-              {filtered.map((r: any) => (
-                <RestaurantCard key={r.id} r={{
-                  id: r.id, slug: r.slug, name: r.name, cuisine: r.cuisine,
-                  rating: r.rating, deliveryTime: r.deliveryTime,
-                  deliveryFee: r.deliveryFee, minOrder: 0,
-                  image: r.imageUrl, isOpen: r.isOpen, isVeg: r.isVeg,
-                  discount: undefined,
-                }} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-20">
-              <div className="text-5xl mb-4">🍽️</div>
-              <h3 className="text-lg font-bold text-[--color-on-surface] mb-2" style={{ fontFamily: "var(--font-heading)" }}>No results found</h3>
-              <p className="text-[--color-on-surface-variant] text-sm">Try different keywords or remove filters</p>
-            </div>
-          )}
-        </>
-      )}
     </div>
   );
 }

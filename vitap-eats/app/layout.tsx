@@ -2,19 +2,18 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Providers from "@/components/shared/Providers";
 import { OfflineBanner } from "@/components/OfflineBanner";
-import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
 import { WebVitals } from "@/components/WebVitals";
 
 export const metadata: Metadata = {
-  title: { default: "VIT-AP Eats", template: "%s | VIT-AP Eats" },
-  description: "Order food from the best restaurants near VIT-AP campus — fast delivery, live tracking.",
-  keywords: ["food delivery", "VIT-AP", "restaurant", "order food"],
+  title: { default: "ZipVIT", template: "%s | ZipVIT" },
+  description: "Lightning-fast campus food & essentials delivery — order now, collect at Main Gate.",
+  keywords: ["food delivery", "VIT-AP", "campus delivery", "ZipVIT"],
   manifest: "/manifest.json",
-  appleWebApp: { capable: true, title: "VIT-AP Eats", statusBarStyle: "default" },
+  appleWebApp: { capable: true, title: "ZipVIT", statusBarStyle: "default" },
   openGraph: {
-    title: "VIT-AP Eats",
-    description: "Order food from restaurants across VIT-AP University campus.",
-    siteName: "VIT-AP Eats",
+    title: "ZipVIT",
+    description: "Lightning-fast campus delivery across VIT-AP University.",
+    siteName: "ZipVIT",
     type: "website",
   },
 };
@@ -32,8 +31,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Providers>{children}</Providers>
         {/* PWA: Offline detection banner */}
         <OfflineBanner />
-        {/* PWA: Install-to-homescreen prompt */}
-        <PWAInstallPrompt />
         {/* Performance: Core Web Vitals instrumentation */}
         <WebVitals />
       </body>

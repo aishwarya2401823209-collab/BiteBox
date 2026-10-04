@@ -3,30 +3,24 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Search, MapPin, ChevronRight, Flame, Star, TrendingUp, Package, Gift } from "lucide-react";
-import RestaurantCard from "@/components/customer/RestaurantCard";
-import { RestaurantGridSkeleton } from "@/components/ui/Skeleton";
 import { useRestaurants, useMenuItems } from "@/lib/hooks";
 import { useLocationStore } from "@/lib/store/location";
 import { DishCard } from "@/components/customer/DishCard";
 
 const CUISINES = [
-  { id: "all",   label: "All",   emoji: "🍽️" },
-  { id: "pizza", label: "Pizza", emoji: "🍕" },
-  { id: "wraps", label: "Wraps", emoji: "🌯" },
-];
-
-const TOP_DISHES = [
-  { id: "d1", name: "Dragonfire Margherita",  price: 150, restaurant: "VIT Bites", image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&q=80" },
-  { id: "d2", name: "Paneer Golden Delight",  price: 180, restaurant: "VIT Bites", image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&q=80" },
-  { id: "d3", name: "Death by Cheese",        price: 209, restaurant: "VIT Bites", image: "https://images.unsplash.com/photo-1598023696416-0193a0bcd302?w=400&q=80" },
-  { id: "d4", name: "Cheese Melt Wrap",       price: 150, restaurant: "VIT Bites", image: "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=400&q=80" },
+  { id: "all",       label: "All",       emoji: "🍽️" },
+  { id: "pizza",     label: "Pizza",     emoji: "🍕" },
+  { id: "wraps",     label: "Wraps",     emoji: "🌯" },
+  { id: "fast-food", label: "Fast Food", emoji: "🍟" },
+  { id: "beverages", label: "Beverages", emoji: "☕" },
+  { id: "chinese",   label: "Chinese",   emoji: "🍜" },
 ];
 
 export default function HomePage() {
   const [activeCuisine, setActiveCuisine] = useState("all");
   const { label } = useLocationStore();
 
-  const { data: restaurants, isLoading: isResLoading, isError: isResError } = useRestaurants(
+  const { data: restaurants } = useRestaurants(
     activeCuisine === "all" ? undefined : activeCuisine
   );
   const activeCategoryLabel = CUISINES.find(c => c.id === activeCuisine)?.label;
@@ -56,13 +50,13 @@ export default function HomePage() {
               fontFamily: "var(--font-heading)",
             }}
           >
-            VE
+            CE
           </span>
           <span
             className="text-base font-extrabold tracking-tight"
             style={{ color: "var(--color-on-primary)", fontFamily: "var(--font-heading)" }}
           >
-            VIT-AP Eats
+            Campus Eats
           </span>
         </div>
 
@@ -104,7 +98,7 @@ export default function HomePage() {
           </span>
         </div>
 
-        {/* Search bar — fully opaque cream */}
+        {/* Search bar */}
         <Link
           href="/search"
           className="flex items-center gap-3 px-4 py-3"
@@ -123,9 +117,9 @@ export default function HomePage() {
         {/* Stats row */}
         <div className="flex gap-4 mt-4">
           {[
-            { icon: Star,    value: "4.8★",       label: "Avg rating"  },
+            { icon: Star,    value: "4.8★",     label: "Avg rating"  },
             { icon: Flame,   value: "Fresh Daily", label: "Made fresh"  },
-            { icon: Package, value: "Main Gate",   label: "Easy pickup" },
+            { icon: Package, value: "Main Gate",    label: "Easy pickup" },
           ].map(({ icon: Icon, value, label }) => (
             <div key={label}>
               <div
@@ -165,7 +159,6 @@ export default function HomePage() {
               </p>
             </div>
             
-            {/* Decorative element */}
             <div className="absolute -right-4 -bottom-4 opacity-20 pointer-events-none" style={{ color: "#ffffff" }}>
               <Gift size={100} strokeWidth={1.5} />
             </div>
@@ -205,7 +198,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ── POPULAR DISHES ───────────────────────────────── */}
+        {/* ── DISHES LIST ────────────────────── */}
         <section>
           <div className="flex items-center justify-between mb-3">
             <h2
@@ -213,160 +206,49 @@ export default function HomePage() {
               style={{ color: "var(--color-on-surface)" }}
             >
               <Flame size={18} style={{ color: "var(--color-primary)" }} />
-              Popular Dishes
+              {activeCuisine === "all" ? "Popular Dishes" : `${activeCategoryLabel} Menu`}
             </h2>
-            <Link
-              href="/search?filter=popular"
-              className="text-xs font-semibold flex items-center gap-0.5"
-              style={{ color: "var(--color-primary)" }}
-            >
-              See all <ChevronRight size={14} />
-            </Link>
           </div>
 
-          <div className="flex gap-3 overflow-x-auto hide-scrollbar pb-2">
-            {TOP_DISHES.map((dish) => (
-              <div
-                key={dish.id}
-                className="shrink-0 group cursor-pointer overflow-hidden"
-                style={{
-                  width: 148,
-                  background: "var(--color-surface-container-lowest)",
-                  borderRadius: "var(--radius-xl)",
-                  boxShadow: "var(--shadow-md)",
-                }}
-              >
-                <div className="relative w-full h-24 overflow-hidden" style={{ borderRadius: "var(--radius-xl) var(--radius-xl) 0 0" }}>
-                  <Image
-                    src={dish.image}
-                    alt={dish.name}
-                    fill
-                    sizes="148px"
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+          <div
+            style={{
+              background: "var(--color-surface-container-lowest)",
+              borderRadius: "var(--radius-xl)",
+              boxShadow: "var(--shadow-sm)",
+              padding: "0 1rem",
+            }}
+          >
+            {isMenuLoading ? (
+              <div className="space-y-4 py-4">
+                {[1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    className="h-20 animate-pulse"
+                    style={{ background: "var(--color-surface-container)", borderRadius: "var(--radius-md)" }}
                   />
-                </div>
-                <div className="p-2.5">
-                  <p
-                    className="font-bold text-xs leading-tight line-clamp-1 mb-0.5"
-                    style={{ fontFamily: "var(--font-heading)", color: "var(--color-on-surface)" }}
-                  >
-                    {dish.name}
-                  </p>
-                  <p className="text-[11px] mb-1.5" style={{ color: "var(--color-on-surface-variant)" }}>
-                    {dish.restaurant}
-                  </p>
-                  <span
-                    className="font-extrabold text-sm tabular-nums"
-                    style={{ color: "var(--color-primary)" }}
-                  >
-                    ₹{dish.price}
-                  </span>
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── RESTAURANTS / MENU GRID ──────────────────────── */}
-        <section>
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="section-heading" style={{ color: "var(--color-on-surface)" }}>
-              {activeCuisine === "all" ? (
-                <><TrendingUp size={18} className="inline mr-1.5" style={{ color: "var(--color-primary)" }} />All Restaurants</>
-              ) : (
-                <><Flame size={18} className="inline mr-1.5" style={{ color: "var(--color-primary)" }} />{CUISINES.find((c) => c.id === activeCuisine)?.label} Menu</>
-              )}
-            </h2>
-          </div>
-
-          {activeCuisine === "all" ? (
-            <>
-              {isResLoading && <RestaurantGridSkeleton />}
-              {isResError && (
-                <div className="text-center py-14">
-                  <p className="text-4xl mb-2">😕</p>
-                  <p className="font-semibold text-sm" style={{ color: "var(--color-on-surface)" }}>Could not load restaurants</p>
-                  <p className="text-xs mt-1" style={{ color: "var(--color-on-surface-variant)" }}>Check your connection and try again</p>
-                </div>
-              )}
-              {restaurants && restaurants.length > 0 && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {restaurants.map((r) => (
-                    <RestaurantCard
-                      key={r.id}
-                      r={{
-                        id: r.id, slug: r.slug, name: r.name,
-                        cuisine: r.cuisine, rating: r.rating,
-                        deliveryTime: 0, deliveryFee: r.deliveryFee,
-                        minOrder: 0, image: r.imageUrl, isOpen: r.isOpen,
-                        isVeg: r.isVeg, discount: undefined,
-                      }}
+            ) : menuItems && menuItems.length > 0 ? (
+              <div>
+                {menuItems.map((item) => {
+                  const rName = restaurants?.find((r) => r.id === item.restaurantId)?.name || "VIT Bites";
+                  return (
+                    <DishCard
+                      key={item.id}
+                      dish={item}
+                      restaurantId={item.restaurantId}
+                      restaurantName={rName}
                     />
-                  ))}
-                </div>
-              )}
-              {restaurants && restaurants.length === 0 && (
-                <div className="text-center py-14">
-                  <p className="text-4xl mb-2">🍽️</p>
-                  <p className="font-semibold text-sm" style={{ color: "var(--color-on-surface)" }}>No restaurants open right now</p>
-                </div>
-              )}
-              <div className="text-center mt-6">
-                <Link
-                  href="/search"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-bold"
-                  style={{
-                    border: "2px solid var(--color-primary)",
-                    color: "var(--color-primary)",
-                    borderRadius: "var(--radius-full)",
-                    background: "var(--color-surface-container-lowest)",
-                  }}
-                >
-                  See all restaurants <ChevronRight size={14} />
-                </Link>
+                  );
+                })}
               </div>
-            </>
-          ) : (
-            <div
-              style={{
-                background: "var(--color-surface-container-lowest)",
-                borderRadius: "var(--radius-xl)",
-                boxShadow: "var(--shadow-sm)",
-                padding: "0 1rem",
-              }}
-            >
-              {isMenuLoading ? (
-                <div className="space-y-4 py-4">
-                  {[1, 2, 3].map((i) => (
-                    <div
-                      key={i}
-                      className="h-20 animate-pulse"
-                      style={{ background: "var(--color-surface-container)", borderRadius: "var(--radius-md)" }}
-                    />
-                  ))}
-                </div>
-              ) : menuItems && menuItems.length > 0 ? (
-                <div>
-                  {menuItems.map((item) => {
-                    const rName = restaurants?.find((r) => r.id === item.restaurantId)?.name || "VIT Bites";
-                    return (
-                      <DishCard
-                        key={item.id}
-                        dish={item}
-                        restaurantId={item.restaurantId}
-                        restaurantName={rName}
-                      />
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className="text-center py-12">
-                  <p className="text-4xl mb-2">🍽️</p>
-                  <p className="font-semibold text-sm" style={{ color: "var(--color-on-surface)" }}>No items in this category</p>
-                </div>
-              )}
-            </div>
-          )}
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-4xl mb-2">🍽️</p>
+                <p className="font-semibold text-sm" style={{ color: "var(--color-on-surface)" }}>No dishes available in this category</p>
+              </div>
+            )}
+          </div>
         </section>
       </div>
 

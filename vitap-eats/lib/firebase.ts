@@ -44,4 +44,7 @@ if (isConfigured) {
   storage = {} as FirebaseStorage;
 }
 
+console.log("🔥 Config project:", firebaseConfig.projectId);
+console.log("🔥 Actual app project:", app.options.projectId);
+
 export { app, auth, db, storage };

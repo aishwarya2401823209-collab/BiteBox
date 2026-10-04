@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function ProfilePage() {
-  const { user, loading: authLoading, signOut } = useSession();
+  const { user, role, loading: authLoading, signOut } = useSession();
   const { data: profile, isLoading: profileLoading } = useProfile();
   const router = useRouter();
 
@@ -26,6 +26,8 @@ export default function ProfilePage() {
   }
 
   if (!user) return null;
+
+  const isAdmin = role === "admin";
 
   return (
     <div className="max-w-[700px] mx-auto px-4 md:px-10 py-6 md:py-10">
@@ -54,16 +56,15 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-        <Link href="/orders" className="bg-[--color-surface-container-lowest] rounded-[--radius-lg] shadow-[--shadow-sm] border border-[--color-border] p-5 hover:bg-[--color-surface-container-low] transition-colors">
-          <h3 className="font-bold text-[--color-on-surface] mb-1" style={{ fontFamily: "var(--font-heading)" }}>My Orders</h3>
-          <p className="text-xs text-[--color-on-surface-variant]">Track live orders and view history</p>
-        </Link>
-        <Link href="/favorites" className="bg-[--color-surface-container-lowest] rounded-[--radius-lg] shadow-[--shadow-sm] border border-[--color-border] p-5 hover:bg-[--color-surface-container-low] transition-colors">
-          <h3 className="font-bold text-[--color-on-surface] mb-1" style={{ fontFamily: "var(--font-heading)" }}>Favorites</h3>
-          <p className="text-xs text-[--color-on-surface-variant]">Quickly reorder from saved restaurants</p>
-        </Link>
-      </div>
+      {/* For customers, show only My Orders card. For admin, show nothing here. */}
+      {!isAdmin && (
+        <div className="mb-8">
+          <Link href="/orders" className="block bg-[--color-surface-container-lowest] rounded-[--radius-lg] shadow-[--shadow-sm] border border-[--color-border] p-5 hover:bg-[--color-surface-container-low] transition-colors">
+            <h3 className="font-bold text-[--color-on-surface] mb-1" style={{ fontFamily: "var(--font-heading)" }}>My Orders</h3>
+            <p className="text-xs text-[--color-on-surface-variant]">Track live orders and view history</p>
+          </Link>
+        </div>
+      )}
 
       <button
         onClick={() => {
